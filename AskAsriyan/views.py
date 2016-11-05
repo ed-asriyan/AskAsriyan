@@ -12,7 +12,7 @@ def base_decorator(func):
         tags = [_tag(''.join([chr(random.randint(ord('A'), ord('z'))) for j in
                               range(0, random.randint(5, 10))]), random.randint(10, 25)) for i in
                 range(random.randint(15, 35))]
-        print(tags)
+        
         return func(request, kwargs, tags=tags)
 
     return decorator
