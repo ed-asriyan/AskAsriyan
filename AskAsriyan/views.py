@@ -4,7 +4,13 @@ import random
 
 def base_decorator(func):
     def decorator(request, *args, **kwargs):
-        tags = [''.join([chr(random.randint(ord('A'), ord('z'))) for j in range(0, random.randint(5, 10))]) for i in
+        class _tag:
+            def __init__(self, name, weight):
+                self.name = name
+                self.weight = weight
+
+        tags = [_tag(''.join([chr(random.randint(ord('A'), ord('z'))) for j in
+                              range(0, random.randint(5, 10))]), random.randint(10, 25)) for i in
                 range(random.randint(15, 35))]
         print(tags)
         return func(request, kwargs, tags=tags)
