@@ -16,3 +16,8 @@ def base_decorator(func):
         return func(request, kwargs, tags=tags)
 
     return decorator
+
+
+@base_decorator
+def sign_in_view(request, *args, **kwargs):
+    return render_to_response('sign_in.html', kwargs)
