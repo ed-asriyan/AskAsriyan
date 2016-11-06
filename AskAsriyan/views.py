@@ -1,5 +1,7 @@
 from django.http.response import HttpResponse
 from django.shortcuts import render_to_response
+from django.http import Http404
+from . import models
 import random
 
 
@@ -14,7 +16,7 @@ def base_decorator(func):
                               range(0, random.randint(5, 10))]), random.randint(10, 25)) for i in
                 range(random.randint(15, 35))]
 
-        return func(request, kwargs, tags=tags)
+        return func(request, tags=tags, **kwargs)
 
     return decorator
 
@@ -27,3 +29,16 @@ def sign_in_view(request, *args, **kwargs):
 @base_decorator
 def sign_up_view(request, *args, **kwargs):
     return render_to_response('sign_up.html', kwargs)
+
+
+@base_decorator
+def article_view(request, article_id, *args, **kwargs):
+    try:
+        article_id = int(article_id)
+        article = models.Article.objects.get(id=article_id)
+    except Exception:
+        raise Http404()
+    finally:
+        pass
+
+    return render_to_response('article.html', {'article': article, **kwargs})

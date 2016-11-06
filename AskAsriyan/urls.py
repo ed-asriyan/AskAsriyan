@@ -18,5 +18,6 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^sign_in/', 'AskAsriyan.views.sign_in_view'),
-    url(r'^sign_up/', 'AskAsriyan.views.sign_up_view')
+    url(r'^sign_up/', 'AskAsriyan.views.sign_up_view'),
+    url(r'article(?P<article_id>\d)/', 'AskAsriyan.views.article_view'),
 ]
