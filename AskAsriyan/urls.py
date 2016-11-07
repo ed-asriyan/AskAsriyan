@@ -19,5 +19,6 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^sign_in/', 'AskAsriyan.views.sign_in_view'),
     url(r'^sign_up/', 'AskAsriyan.views.sign_up_view'),
-    url(r'^login/', 'AskAsriyan.views.login_view')
+    url(r'^login/', 'AskAsriyan.views.login_view'),
+    url(r'^logout/', 'AskAsriyan.views.logout_view'),
 ]

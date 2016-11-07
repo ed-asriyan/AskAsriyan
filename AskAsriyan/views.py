@@ -43,3 +43,8 @@ def login_view(request, *args, **kwargs):
             args['login_failed'] = True
 
     return sign_in_view(request, **args)
+
+
+def logout_view(request, *args, **kwargs):
+    auth.logout(request)
+    return redirect('/')
