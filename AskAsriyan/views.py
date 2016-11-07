@@ -1,5 +1,6 @@
 from django.http.response import HttpResponse
 from django.shortcuts import render_to_response
+from django.contrib import auth
 import random
 
 
@@ -14,7 +15,7 @@ def base_decorator(func):
                               range(0, random.randint(5, 10))]), random.randint(10, 25)) for i in
                 range(random.randint(15, 35))]
 
-        return func(request, kwargs, tags=tags)
+        return func(request, kwargs, tags=tags, user=auth.get_user(request))
 
     return decorator
 
