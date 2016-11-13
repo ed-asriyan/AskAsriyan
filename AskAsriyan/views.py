@@ -20,13 +20,14 @@ def base_decorator(func):
     return decorator
 
 
+
 @base_decorator
-def sign_in_view(request, *args, **kwargs):
+def sign_in_page_view(request, *args, **kwargs):
     return render_to_response('sign_in.html', kwargs)
 
 
 @base_decorator
-def sign_up_view(request, *args, **kwargs):
+def sign_up_page_view(request, *args, **kwargs):
     return render_to_response('sign_up.html', kwargs)
 
 
@@ -42,7 +43,7 @@ def login_view(request, *args, **kwargs):
         else:
             args['login_failed'] = True
 
-    return sign_in_view(request, **args)
+    return sign_in_page_view(request, **args)
 
 
 def logout_view(request, *args, **kwargs):
