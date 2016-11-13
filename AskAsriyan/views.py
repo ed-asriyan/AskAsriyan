@@ -2,6 +2,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import render_to_response, redirect
 from django.contrib import auth
 from django.http import Http404
+from django.core.paginator import Paginator
 from . import models
 import random
 
@@ -20,6 +21,17 @@ def base_decorator(func):
         return func(request, **kwargs, tags=tags, user=auth.get_user(request))
 
     return decorator
+
+
+@base_decorator
+def index_page_view(request, *args, **kwargs):
+    return redirect('/articles/1')
+
+
+@base_decorator
+def article_list_page_view(request, page=1, *args, **kwargs):
+    articles = Paginator(models.Article.objects.all(), 10)
+    return render_to_response('index.html', {'articles': articles.page(page), **kwargs})
 
 
 @base_decorator
