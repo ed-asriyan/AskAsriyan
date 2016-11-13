@@ -20,7 +20,6 @@ def base_decorator(func):
     return decorator
 
 
-
 @base_decorator
 def sign_in_page_view(request, *args, **kwargs):
     return render_to_response('sign_in.html', kwargs)
