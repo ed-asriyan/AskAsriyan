@@ -30,7 +30,10 @@ def index_page_view(request, *args, **kwargs):
 
 @base_decorator
 def article_list_page_view(request, page=1, *args, **kwargs):
+    page = int(page)
     articles = Paginator(models.Article.objects.all(), 10)
+    if page > articles.num_pages:
+        return redirect('/')
     return render_to_response('index.html', {'articles': articles.page(page), **kwargs})
 
 
