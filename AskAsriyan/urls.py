@@ -21,5 +21,7 @@ urlpatterns = [
     url(r'^sign_up/', 'AskAsriyan.views.sign_up_page_view'),
     url(r'^login/', 'AskAsriyan.views.login_view'),
     url(r'^logout/', 'AskAsriyan.views.logout_view'),
-    url(r'article(?P<article_id>\d)/', 'AskAsriyan.views.article_view'),
+    url(r'^article(?P<article_id>\d+)/', 'AskAsriyan.views.article_view'),
+    url(r'^articles/(?P<page>\d+)/', 'AskAsriyan.views.article_list_page_view'),
+    url(r'^$', 'AskAsriyan.views.index_page_view'),
 ]
