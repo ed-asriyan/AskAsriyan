@@ -73,8 +73,9 @@ def register_view(request, *args, **kwargs):
         user_name = request.POST.get('username')
         user_password = request.POST.get('password')
         user_email = request.POST.get('email')
+        user_nick = request.POST.get('nickname')
 
-        user = User.objects.create_user(user_name, user_email, user_password)
+        user = User.objects.create_user(user_name, user_email, user_password, first_name=user_nick)
         if user:
             user.save()
             return redirect('/sign_in')
