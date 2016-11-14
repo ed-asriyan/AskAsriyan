@@ -1,7 +1,8 @@
 from django.http.response import HttpResponse
 from django.shortcuts import render_to_response, redirect
+from django.contrib.auth.models import User
 from django.contrib import auth
-from django.http import Http404
+from django.http import Http404, HttpResponseBadRequest
 from django.core.paginator import Paginator
 from . import models
 import random
@@ -65,6 +66,22 @@ def login_view(request, *args, **kwargs):
 def logout_view(request, *args, **kwargs):
     auth.logout(request)
     return redirect('/')
+
+
+def register_view(request, *args, **kwargs):
+    if request.POST:
+        user_name = request.POST.get('username')
+        user_password = request.POST.get('password')
+        user_email = request.POST.get('email')
+
+        user = User.objects.create_user(user_name, user_email, user_password)
+        if user:
+            user.save()
+            return redirect('/sign_in')
+        else:
+            return redirect('/sign_up/')
+    else:
+        return HttpResponseBadRequest()
 
 
 @base_decorator
