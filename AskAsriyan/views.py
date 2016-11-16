@@ -92,7 +92,7 @@ def article_view(request, article_id, *args, **kwargs):
 
 @base_decorator
 def article_add_page_view(request, *args, **kwargs):
-    return render_to_response('article_add.html', kwargs)
+    return render_to_response('ask.html', kwargs)
 
 
 @login_required
