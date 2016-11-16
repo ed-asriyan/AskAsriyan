@@ -85,6 +85,7 @@ class SignUpForm(forms.Form):
 class ArticleAddForm(forms.Form):
     title = forms.CharField(max_length=255, min_length=3, widget=BootstrapStringInput)
     text = forms.CharField(label='Text', widget=BootstrapTextInput())
+    tags = forms.CharField(label='Tags', widget=BootstrapStringInput, required=False)
 
     def __init__(self, user, *args, **kwargs):
         self._user = user
@@ -97,3 +98,6 @@ class ArticleAddForm(forms.Form):
         except User.DoesNotExist:
             return title
         raise forms.ValidationError('Question "%s" is already exist.' % title)
+
+    def clean_tags(self):
+        return self.cleaned_data['tags']
