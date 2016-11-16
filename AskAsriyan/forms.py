@@ -109,8 +109,10 @@ class ArticleAddForm(forms.Form):
         article_body = self.cleaned_data['text']
         article_date = datetime.datetime.now()
         article_rating = 0
+        article_author = self._user
 
         article = models.Article.objects.create(article_title=article_title, article_body=article_body,
-                                                article_date=article_date, article_rating=article_rating)
+                                                article_date=article_date, article_rating=article_rating,
+                                                article_author=article_author)
         article.save()
         return article
