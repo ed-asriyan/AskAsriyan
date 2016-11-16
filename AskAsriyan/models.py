@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Article(models.Model):
     class Meta():
         db_table = "article"
@@ -8,3 +9,6 @@ class Article(models.Model):
     article_body = models.TextField()
     article_date = models.DateTimeField()
     article_rating = models.IntegerField()
+
+    def get_url(self):
+        return '/article{article_id}'.format(article_id=self.id)

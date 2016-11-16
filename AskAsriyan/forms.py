@@ -1,3 +1,5 @@
+import datetime
+
 from django import forms
 from django.contrib import auth
 from django.contrib.auth.models import User
@@ -92,12 +94,23 @@ class ArticleAddForm(forms.Form):
         forms.Form.__init__(self, *args, **kwargs)
 
     def clean_title(self):
-        title = self.cleaned_data['article_title']
+        title = self.cleaned_data['title']
         try:
             user = models.Article.objects.get(article_title=title)
-        except User.DoesNotExist:
+        except models.Article.DoesNotExist:
             return title
         raise forms.ValidationError('Question "%s" is already exist.' % title)
 
     def clean_tags(self):
         return self.cleaned_data['tags']
+
+    def save(self):
+        article_title = self.cleaned_data['title']
+        article_body = self.cleaned_data['text']
+        article_date = datetime.datetime.now()
+        article_rating = 0
+
+        article = models.Article.objects.create(article_title=article_title, article_body=article_body,
+                                                article_date=article_date, article_rating=article_rating)
+        article.save()
+        return article

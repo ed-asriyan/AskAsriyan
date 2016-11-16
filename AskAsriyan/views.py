@@ -99,7 +99,9 @@ def article_add_page_view(request, *args, **kwargs):
 def article_add_view(request, *args, **kwargs):
     if request.POST:
         form = forms.ArticleAddForm(request.user, request.POST)
-        if form.is_valid(): pass  # todo:
+        if form.is_valid():
+            return redirect(form.save().get_url())
+
     else:
         form = forms.ArticleAddForm(request.user)
     return article_add_page_view(request, form=form, *args, **kwargs)
