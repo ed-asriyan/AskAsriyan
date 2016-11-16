@@ -67,19 +67,13 @@ def logout_view(request, *args, **kwargs):
 
 def register_view(request, *args, **kwargs):
     if request.POST:
-        user_name = request.POST.get('username')
-        user_password = request.POST.get('password')
-        user_email = request.POST.get('email')
-        user_nick = request.POST.get('nickname')
-
-        user = User.objects.create_user(user_name, user_email, user_password, first_name=user_nick)
-        if user:
-            user.save()
-            return redirect('/sign_in')
-        else:
-            return redirect('/sign_up/')
+        form = forms.SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            return redirect('/sign_in/')
     else:
-        return HttpResponseBadRequest()
+        form = forms.SignUpForm()
+    return sign_up_page_view(request, form=form, *args, **kwargs)
 
 
 @base_decorator
