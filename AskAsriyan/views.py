@@ -37,7 +37,7 @@ def article_list_page_view(request, page=1, *args, **kwargs):
     articles = Paginator(models.Article.objects.all(), 10)
     if page > articles.num_pages:
         return redirect('/')
-    return render_to_response('index.html', {'articles': articles.page(page), **kwargs})
+    return render_to_response('index.html', {'articles': articles.page(page), 'is_preview': True, **kwargs})
 
 
 @base_decorator
@@ -87,7 +87,7 @@ def article_view(request, article_id, *args, **kwargs):
     finally:
         pass
 
-    return render_to_response('article.html', {'article': article, **kwargs})
+    return render_to_response('article.html', {'article': article, 'is_preview': False, **kwargs})
 
 
 @base_decorator
