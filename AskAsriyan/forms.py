@@ -25,6 +25,14 @@ class BootstrapEmailInput(BootstrapStringInput):
         BootstrapStringInput.__init__(self, attrs=attrs)
 
 
+def BootstrapTextInput(attrs={}, *args, **kwargs):
+    attrs = {**attrs,
+             'class': 'form-control',
+             'rows': '5',
+             'style': 'resize:vertical;'}
+    return forms.Textarea(attrs=attrs, **kwargs)
+
+
 class SignInForm(forms.Form):
     user_name = forms.CharField(max_length=20, label='Login', widget=BootstrapStringInput)
     password = forms.CharField(label='Password', widget=BootstrapPasswordInput)
@@ -76,6 +84,7 @@ class SignUpForm(forms.Form):
 
 class ArticleAddForm(forms.Form):
     title = forms.CharField(max_length=255, min_length=3, widget=BootstrapStringInput)
+    text = forms.CharField(label='Text', widget=BootstrapTextInput())
 
     def __init__(self, user, *args, **kwargs):
         self._user = user
