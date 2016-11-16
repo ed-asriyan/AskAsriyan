@@ -2,7 +2,7 @@
     <div class="alert alert-danger">{{ e }}</div>
 {% endfor %}
 {% for field in form %}
-    <div class="form-group{% if field.errors %}has-error{% endif %}">
+    <div class="form-group {% if field.errors %}has-error{% endif %}">
         <label class="control-label center-block col-sm-4">{{ field.label }}:</label>
         <div class="col-sm-8">{{ field }}</div>
         {% for error in field.errors %}
