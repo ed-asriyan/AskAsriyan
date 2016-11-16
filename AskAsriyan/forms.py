@@ -77,9 +77,9 @@ class SignUpForm(forms.Form):
 class ArticleAddForm(forms.Form):
     title = forms.CharField(max_length=255, min_length=3, widget=BootstrapStringInput)
 
-    def __init__(self, user, **kwargs):
+    def __init__(self, user, *args, **kwargs):
         self._user = user
-        forms.Form.__init__(self, **kwargs)
+        forms.Form.__init__(self, *args, **kwargs)
 
     def clean_title(self):
         title = self.cleaned_data['article_title']
