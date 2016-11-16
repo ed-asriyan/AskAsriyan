@@ -3,29 +3,29 @@ from django.contrib import auth
 from django.contrib.auth.models import User
 
 
-class BootstrapTextInput(forms.TextInput):
+class BootstrapStringInput(forms.TextInput):
     def __init__(self, attrs={}, *args, **kwargs):
         attrs = {**attrs,
                  'class': 'form-control'}
         forms.TextInput.__init__(self, attrs=attrs)
 
 
-class BootstrapPasswordInput(BootstrapTextInput):
+class BootstrapPasswordInput(BootstrapStringInput):
     def __init__(self, attrs={}, *args, **kwargs):
         attrs = {**attrs,
                  'type': 'password'}
-        BootstrapTextInput.__init__(self, attrs=attrs)
+        BootstrapStringInput.__init__(self, attrs=attrs)
 
 
-class BootstrapEmailInput(BootstrapTextInput):
+class BootstrapEmailInput(BootstrapStringInput):
     def __init__(self, attrs={}, *args, **kwargs):
         attrs = {**attrs,
                  'type': 'email'}
-        BootstrapTextInput.__init__(self, attrs=attrs)
+        BootstrapStringInput.__init__(self, attrs=attrs)
 
 
 class SignInForm(forms.Form):
-    user_name = forms.CharField(max_length=20, label='Login', widget=BootstrapTextInput)
+    user_name = forms.CharField(max_length=20, label='Login', widget=BootstrapStringInput)
     password = forms.CharField(label='Password', widget=BootstrapPasswordInput)
 
     def clean(self):
@@ -42,9 +42,9 @@ class SignInForm(forms.Form):
 
 
 class SignUpForm(forms.Form):
-    login = forms.CharField(max_length=20, label='Login', widget=BootstrapTextInput)
+    login = forms.CharField(max_length=20, label='Login', widget=BootstrapStringInput)
     email = forms.CharField(max_length=255, label='E-mail', widget=BootstrapEmailInput)
-    nick = forms.CharField(max_length=20, label='Nick', widget=BootstrapTextInput)
+    nick = forms.CharField(max_length=20, label='Nick', widget=BootstrapStringInput)
     password = forms.CharField(max_length=20, min_length=4, label='Password', widget=BootstrapPasswordInput)
     password_repeat = forms.CharField(max_length=20, min_length=4, label='Repeat', widget=BootstrapPasswordInput)
 
