@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from django.http import Http404, HttpResponseBadRequest
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 from . import models
 from . import forms
 import random
@@ -36,7 +37,7 @@ def article_list_page_view(request, page=1, *args, **kwargs):
     articles = Paginator(models.Article.objects.all(), 10)
     if page > articles.num_pages:
         return redirect('/')
-    return render_to_response('index.html', {'articles': articles.page(page), **kwargs})
+    return render_to_response('index.html', {'articles': articles.page(page), 'is_preview': True, **kwargs})
 
 
 @base_decorator
@@ -86,4 +87,21 @@ def article_view(request, article_id, *args, **kwargs):
     finally:
         pass
 
-    return render_to_response('article.html', {'article': article, **kwargs})
+    return render_to_response('article.html', {'article': article, 'is_preview': False, **kwargs})
+
+
+@base_decorator
+def article_add_page_view(request, *args, **kwargs):
+    return render_to_response('ask.html', kwargs)
+
+
+@login_required
+def article_add_view(request, *args, **kwargs):
+    if request.POST:
+        form = forms.ArticleAddForm(request.user, request.POST)
+        if form.is_valid():
+            return redirect(form.save().get_url())
+
+    else:
+        form = forms.ArticleAddForm(request.user)
+    return article_add_page_view(request, form=form, *args, **kwargs)

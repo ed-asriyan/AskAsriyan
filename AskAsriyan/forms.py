@@ -1,6 +1,9 @@
+import datetime
+
 from django import forms
 from django.contrib import auth
 from django.contrib.auth.models import User
+from . import models
 
 
 class BootstrapStringInput(forms.TextInput):
@@ -22,6 +25,14 @@ class BootstrapEmailInput(BootstrapStringInput):
         attrs = {**attrs,
                  'type': 'email'}
         BootstrapStringInput.__init__(self, attrs=attrs)
+
+
+def BootstrapTextInput(attrs={}, *args, **kwargs):
+    attrs = {**attrs,
+             'class': 'form-control',
+             'rows': '5',
+             'style': 'resize:vertical;'}
+    return forms.Textarea(attrs=attrs, **kwargs)
 
 
 class SignInForm(forms.Form):
@@ -66,8 +77,42 @@ class SignUpForm(forms.Form):
 
     def clean_password_repeat(self):
         if self.cleaned_data['password'] != self.cleaned_data['password_repeat']:
-            raise ValueError('Passwords is not equal.')
+            raise forms.ValidationError('Passwords is not equal.')
 
     def save(self):
         self.user = User.objects.create_user(self.cleaned_data['login'], self.cleaned_data['email'],
                                              self.cleaned_data['password'], first_name=self.cleaned_data['nick'])
+
+
+class ArticleAddForm(forms.Form):
+    title = forms.CharField(max_length=255, min_length=3, widget=BootstrapStringInput)
+    text = forms.CharField(label='Text', widget=BootstrapTextInput())
+    tags = forms.CharField(label='Tags', widget=BootstrapStringInput, required=False)
+
+    def __init__(self, user, *args, **kwargs):
+        self._user = user
+        forms.Form.__init__(self, *args, **kwargs)
+
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        try:
+            user = models.Article.objects.get(article_title=title)
+        except models.Article.DoesNotExist:
+            return title
+        raise forms.ValidationError('Question "%s" is already exist.' % title)
+
+    def clean_tags(self):
+        return self.cleaned_data['tags']
+
+    def save(self):
+        article_title = self.cleaned_data['title']
+        article_body = self.cleaned_data['text']
+        article_date = datetime.datetime.now()
+        article_rating = 0
+        article_author = self._user
+
+        article = models.Article.objects.create(article_title=article_title, article_body=article_body,
+                                                article_date=article_date, article_rating=article_rating,
+                                                article_author=article_author)
+        article.save()
+        return article
