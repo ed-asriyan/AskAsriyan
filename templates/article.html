@@ -3,4 +3,7 @@
 
 {% block content %}
     {% include "blocks/article.html" %}
+    {% for comment in article.get_comments %}
+        {% include "blocks/comment.html" %}
+    {% endfor %}
 {% endblock %}
