@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from django.http import Http404, HttpResponseBadRequest
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 from . import models
 from . import forms
 import random
@@ -87,3 +88,18 @@ def article_view(request, article_id, *args, **kwargs):
         pass
 
     return render_to_response('article.html', {'article': article, **kwargs})
+
+
+@base_decorator
+def article_add_page_view(request, *args, **kwargs):
+    return render_to_response('article_add.html', kwargs)
+
+
+@login_required
+def article_add_view(request, *args, **kwargs):
+    if request.POST:
+        form = forms.ArticleAddForm(request.user, request.POST)
+        if form.is_valid(): pass  # todo:
+    else:
+        form = forms.ArticleAddForm(request.user)
+    return article_add_page_view(request, form=form, *args, **kwargs)

@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib import auth
 from django.contrib.auth.models import User
+from . import models
 
 
 class BootstrapStringInput(forms.TextInput):
@@ -71,3 +72,19 @@ class SignUpForm(forms.Form):
     def save(self):
         self.user = User.objects.create_user(self.cleaned_data['login'], self.cleaned_data['email'],
                                              self.cleaned_data['password'], first_name=self.cleaned_data['nick'])
+
+
+class ArticleAddForm(forms.Form):
+    title = forms.CharField(max_length=255, min_length=3, widget=BootstrapStringInput)
+
+    def __init__(self, user, **kwargs):
+        self._user = user
+        forms.Form.__init__(self, **kwargs)
+
+    def clean_title(self):
+        title = self.cleaned_data['article_title']
+        try:
+            user = models.Article.objects.get(article_title=title)
+        except User.DoesNotExist:
+            return title
+        raise forms.ValidationError('Question "%s" is already exist.' % title)
