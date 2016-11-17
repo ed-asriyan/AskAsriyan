@@ -126,6 +126,12 @@ class CommentAddForm(forms.Form):
         self._user = user
         forms.Form.__init__(self, *args, **kwargs)
 
+    def clean_text(self):
+        text = self.cleaned_data['text']
+        if not text or not len(text):
+            raise forms.ValidationError('This field is required.')
+        return text
+
     def clean_article_id(self):
         id = self.cleaned_data['article_id']
         if models.Article.objects.get(id=id):

@@ -79,16 +79,14 @@ def register_view(request, *args, **kwargs):
 
 @base_decorator
 def article_view(request, article_id, *args, **kwargs):
+    article = models.Article.objects.get(id=article_id)
     if request.POST:
         form = forms.CommentAddForm(request.user, request.POST)
         if form.is_valid():
             return redirect(form.save().get_url())
-        else:
-            return redirect('/')
     else:
-        article = models.Article.objects.get(id=article_id)
         form = forms.CommentAddForm(initial={'article_id': article_id})
-        return render_to_response('article.html', {'article': article, 'is_preview': False, **kwargs, 'form': form})
+    return render_to_response('article.html', {'article': article, 'is_preview': False, **kwargs, 'form': form})
 
 
 @base_decorator
