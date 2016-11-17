@@ -2,5 +2,11 @@
 {% load static %}
 
 {% block content %}
-    {% include "blocks/article.html" %}
+    {% include "models/article.html" %}
+    {% for comment in article.get_comments %}
+        {% include "models/comment.html" %}
+    {% endfor %}
+    {% if article.article_author_id != user.id %}
+        {% include 'forms/comment_form.html' %}
+    {% endif %}
 {% endblock %}

@@ -89,7 +89,7 @@ class ArticleAddForm(forms.Form):
     text = forms.CharField(label='Text', widget=BootstrapTextInput())
     tags = forms.CharField(label='Tags', widget=BootstrapStringInput, required=False)
 
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, user=None, *args, **kwargs):
         self._user = user
         forms.Form.__init__(self, *args, **kwargs)
 
@@ -116,3 +116,37 @@ class ArticleAddForm(forms.Form):
                                                 article_author=article_author)
         article.save()
         return article
+
+
+class CommentAddForm(forms.Form):
+    text = forms.CharField(widget=BootstrapTextInput(attrs={'placeholder': 'Type your comment here...'}))
+    article_id = forms.IntegerField(widget=forms.HiddenInput())
+
+    def __init__(self, user=None, *args, **kwargs):
+        self._user = user
+        forms.Form.__init__(self, *args, **kwargs)
+
+    def clean_text(self):
+        text = self.cleaned_data['text']
+        if not text or not len(text):
+            raise forms.ValidationError('This field is required.')
+        return text
+
+    def clean_article_id(self):
+        id = self.cleaned_data['article_id']
+        if models.Article.objects.get(id=id):
+            return id
+        raise forms.ValidationError('Article does not exist.')
+
+    def save(self):
+        comment_body = self.cleaned_data['text']
+        comment_date = datetime.datetime.now()
+        comment_rating = 0
+        comment_author = self._user
+        comment_article_id = self.cleaned_data['article_id']
+        comment = models.Comment.objects.create(comment_author=comment_author, comment_body=comment_body,
+                                                comment_rating=comment_rating, comment_date=comment_date,
+                                                comment_article_id=comment_article_id)
+
+        comment.save()
+        return comment
