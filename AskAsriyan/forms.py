@@ -150,3 +150,14 @@ class CommentAddForm(forms.Form):
 
         comment.save()
         return comment
+
+
+class SettingsForm(forms.Form):
+    login = forms.CharField(max_length=20, label='Login', widget=BootstrapStringInput)
+    email = forms.CharField(max_length=255, label='E-mail', widget=BootstrapEmailInput)
+    nick = forms.CharField(max_length=20, label='Nick', widget=BootstrapStringInput)
+
+    def __init__(self, user=None, *args, **kwargs):
+        self._user = user
+        forms.Form.__init__(self, initial={'login': user.username, 'email': user.email, 'nick': user.first_name}, *args,
+                            **kwargs)
