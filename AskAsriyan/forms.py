@@ -157,7 +157,34 @@ class SettingsForm(forms.Form):
     email = forms.CharField(max_length=255, label='E-mail', widget=BootstrapEmailInput)
     nick = forms.CharField(max_length=20, label='Nick', widget=BootstrapStringInput)
 
-    def __init__(self, user=None, *args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
         self._user = user
         forms.Form.__init__(self, initial={'login': user.username, 'email': user.email, 'nick': user.first_name}, *args,
                             **kwargs)
+
+    def clean_login(self):
+        username = self.cleaned_data['login']
+        if username == self._user.username:
+            return username
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return username
+        raise forms.ValidationError('Username "%s" is already in use.' % username)
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if email == self._user.email:
+            return email
+        try:
+            User.objects.get(email=email)
+        except User.DoesNotExist:
+            return email
+        raise forms.ValidationError('E-mail "%s" is already in use.' % email)
+
+    def save(self):
+        self._user.username = self.cleaned_data['login']
+        self._user.email = self.cleaned_data['email']
+        self._user.first_name = self.cleaned_data['nick']
+
+        self._user.save()
