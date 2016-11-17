@@ -2,6 +2,10 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
+class Profile(models.Model):
+    profile_user = models.ForeignKey(User)
+
+
 class Article(models.Model):
     class Meta():
         db_table = "article"
