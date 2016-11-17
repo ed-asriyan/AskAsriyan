@@ -6,4 +6,5 @@
     {% for comment in article.get_comments %}
         {% include "models/comment.html" %}
     {% endfor %}
+    {% include 'forms/comment_form.html' %}
 {% endblock %}
