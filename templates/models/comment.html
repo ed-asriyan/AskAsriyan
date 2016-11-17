@@ -15,7 +15,13 @@
                 {{ comment.comment_body }}
             </p>
             <hr align="center">
-            <input type="checkbox" value="{{ comment.comment_is_correct }}"><span>Is correct</span>
+            {% if article.article_author_id == user.id %}
+                <input type="checkbox" value="{{ comment.comment_is_correct }}"><span>Is correct</span>
+            {% else %}
+                {% if comment.comment_is_correct %}
+                    <span>It is correct answer!</span>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
     <hr align="center" size="100">
