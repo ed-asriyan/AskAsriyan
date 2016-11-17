@@ -83,6 +83,8 @@ class SignUpForm(forms.Form):
         self.user = User.objects.create_user(self.cleaned_data['login'], self.cleaned_data['email'],
                                              self.cleaned_data['password'], first_name=self.cleaned_data['nick'])
 
+        models.Profile.objects.create(profile_user=self.user)
+
 
 class ArticleAddForm(forms.Form):
     title = forms.CharField(max_length=255, min_length=3, widget=BootstrapStringInput)
