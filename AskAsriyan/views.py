@@ -104,3 +104,14 @@ def article_add_view(request, *args, **kwargs):
     else:
         form = forms.ArticleAddForm()
     return article_add_page_view(request, form=form, *args, **kwargs)
+
+
+@base_decorator
+def profile_settings_view(request, *args, **kwargs):
+    if request.POST:
+        form = forms.SettingsForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = forms.SettingsForm(request.user)
+    return render_to_response('profile_settings.html', {'form': form, **kwargs})
