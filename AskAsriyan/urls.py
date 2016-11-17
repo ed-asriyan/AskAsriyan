@@ -23,6 +23,5 @@ urlpatterns = [
     url(r'^article(?P<article_id>\d+)/', 'AskAsriyan.views.article_view'),
     url(r'^articles/(?P<page>\d+)/', 'AskAsriyan.views.article_list_page_view'),
     url(r'^ask/', 'AskAsriyan.views.article_add_view'),
-    url(r'^add_comment/', 'AskAsriyan.views.add_comment'),
     url(r'^$', 'AskAsriyan.views.index_page_view'),
 ]

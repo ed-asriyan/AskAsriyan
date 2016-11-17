@@ -79,16 +79,16 @@ def register_view(request, *args, **kwargs):
 
 @base_decorator
 def article_view(request, article_id, *args, **kwargs):
-    try:
-        article_id = int(article_id)
+    if request.POST:
+        form = forms.CommentAddForm(request.user, request.POST)
+        if form.is_valid():
+            return redirect(form.save().get_url())
+        else:
+            return redirect('/')
+    else:
         article = models.Article.objects.get(id=article_id)
-        form = forms.CommentAddForm(initial={'article_id': str(article_id)})
-    except Exception:
-        raise Http404()
-    finally:
-        pass
-
-    return render_to_response('article.html', {'article': article, 'is_preview': False, **kwargs, 'form': form})
+        form = forms.CommentAddForm(initial={'article_id': article_id})
+        return render_to_response('article.html', {'article': article, 'is_preview': False, **kwargs, 'form': form})
 
 
 @base_decorator
@@ -106,12 +106,3 @@ def article_add_view(request, *args, **kwargs):
     else:
         form = forms.ArticleAddForm()
     return article_add_page_view(request, form=form, *args, **kwargs)
-
-
-def add_comment(request, *args, **kwargs):
-    if request.POST:
-        form = forms.CommentAddForm(request.user, request.POST)
-        if form.is_valid():
-            return redirect(form.save().get_url())
-
-    return HttpResponseBadRequest()

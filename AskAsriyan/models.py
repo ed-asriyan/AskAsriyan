@@ -16,7 +16,7 @@ class Article(models.Model):
         return Comment.objects.filter(comment_article_id=self.id)
 
     def get_url(self):
-        return '/article{article_id}'.format(article_id=self.id)
+        return '/article{article_id}/'.format(article_id=self.id)
 
 
 class Comment(models.Model):
