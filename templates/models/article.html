@@ -18,7 +18,7 @@
             <hr align="center">
             <span style="margin-right: 20px">
                 {% if is_preview %}
-                    <a href="{{ article.get_url }}">Answers: 100</a>
+                    <a href="{{ article.get_url }}">Answers: {{ article.get_comments|length }}</a>
                 {% endif %}
             </span>
             <span style="font-size:20px;">Tags:</span>
