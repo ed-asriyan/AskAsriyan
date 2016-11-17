@@ -119,7 +119,7 @@ class ArticleAddForm(forms.Form):
 
 
 class CommentAddForm(forms.Form):
-    text = forms.CharField(widget=BootstrapTextInput())
+    text = forms.CharField(widget=BootstrapTextInput(attrs={'placeholder': 'Type your comment here...'}))
     article_id = forms.IntegerField(widget=forms.HiddenInput())
 
     def __init__(self, user=None, *args, **kwargs):
