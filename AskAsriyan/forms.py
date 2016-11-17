@@ -89,7 +89,7 @@ class ArticleAddForm(forms.Form):
     text = forms.CharField(label='Text', widget=BootstrapTextInput())
     tags = forms.CharField(label='Tags', widget=BootstrapStringInput, required=False)
 
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, user=None, *args, **kwargs):
         self._user = user
         forms.Form.__init__(self, *args, **kwargs)
 

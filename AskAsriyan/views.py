@@ -103,5 +103,5 @@ def article_add_view(request, *args, **kwargs):
             return redirect(form.save().get_url())
 
     else:
-        form = forms.ArticleAddForm(request.user)
+        form = forms.ArticleAddForm()
     return article_add_page_view(request, form=form, *args, **kwargs)
