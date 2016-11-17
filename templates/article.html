@@ -6,5 +6,7 @@
     {% for comment in article.get_comments %}
         {% include "models/comment.html" %}
     {% endfor %}
-    {% include 'forms/comment_form.html' %}
+    {% if article.article_author_id != user.id %}
+        {% include 'forms/comment_form.html' %}
+    {% endif %}
 {% endblock %}

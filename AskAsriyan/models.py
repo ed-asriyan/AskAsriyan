@@ -25,7 +25,7 @@ class Comment(models.Model):
 
     comment_author = models.ForeignKey(User)
     comment_body = models.TextField()
-    comment_date = models.DateField()
+    comment_date = models.DateTimeField()
     comment_is_correct = models.BooleanField(default=False)
     comment_rating = models.IntegerField(default=0)
     comment_article = models.ForeignKey('Article')
