@@ -36,3 +36,12 @@ class Comment(models.Model):
 
     def get_url(self):
         return self.comment_article.get_url()
+
+
+class ArticleRate(models.Model):
+    class Meta:
+        db_table = "article_rate"
+
+    like_author = models.ForeignKey(User)
+    like_article = models.ForeignKey(Article)
+    like_positive = models.BooleanField()
