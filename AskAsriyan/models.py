@@ -40,21 +40,21 @@ class Comment(models.Model):
 
 
 class ArticleLikeManager(models.Manager):
-    def get_question_likes(self, question):
-        return self.filter(question=question)
+    def get_question_likes(self, article):
+        return self.filter(question=article)
 
-    def sum_for_question(self, question):
-        return self.get_question_likes(question).aggregate(sum=Sum('value'))['sum']
+    def sum_for_question(self, article):
+        return self.get_question_likes(article).aggregate(sum=Sum('value'))['sum']
 
-    def add_or_update(self, author, question, value):
+    def add_or_update(self, author, article, value):
         obj, new = self.update_or_create(
             article_like_author=author,
-            article_like_question=question,
-            article_like_defaults={'value': value}
+            article_like_question=article,
+            defaults={'value': value}
         )
 
-        question.likes = self.sum_for_question(question)
-        question.save()
+        article.likes = self.sum_for_question(article)
+        article.save()
         return new
 
 
@@ -67,3 +67,33 @@ class ArticleLike(models.Model):
     article_like_value = models.SmallIntegerField(default=1)
 
     objects = ArticleLikeManager()
+
+
+class AnswerLikeManager(models.Manager):
+    def has_answer(self, comment):
+        return self.filter(answer=comment)
+
+    def sum_for_answer(self, comment):
+        return self.has_answer(comment).aggregate(sum=Sum('value'))['sum']
+
+    def add_or_update(self, author, comment, value):
+        obj, new = self.update_or_create(
+            comment_like_author=author,
+            comment_like_answer=comment,
+            defaults={'value': value}
+        )
+
+        comment.likes = self.sum_for_answer(comment)
+        comment.save()
+        return new
+
+
+class AnswerLike(models.Model):
+    UP = 1
+    DOWN = -1
+
+    comment_like_answer = models.ForeignKey('Comment')
+    comment_like_author = models.ForeignKey(User)
+    comment_like_value = models.SmallIntegerField(default=1)
+
+    objects = AnswerLikeManager()
