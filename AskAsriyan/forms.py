@@ -103,6 +103,12 @@ class ArticleAddForm(forms.Form):
             return title
         raise forms.ValidationError('Question "%s" is already exist.' % title)
 
+    def clean_tags(self):
+        if 'tags' in self.cleaned_data:
+            if self.cleaned_data['tags'].count(',') > 2:
+                raise forms.ValidationError("Too many tags. 3 is maximum.")
+            return self.cleaned_data['tags']
+
     def save(self):
         article = models.Article()
         article.article_title = self.cleaned_data['title']
@@ -111,12 +117,11 @@ class ArticleAddForm(forms.Form):
         article.article_rating = 0
         article.article_author = self._user
         article.save()
-        if 'tags' in self.cleaned_data: # save tags
+        if 'tags' in self.cleaned_data:  # save tags
             for tag in self.cleaned_data['tags'].split(','):
                 if len(tag):
                     create = models.Tag.objects.get_or_create(tag.strip())
                     article.article_tags.add(create)
-
 
         return article
 
