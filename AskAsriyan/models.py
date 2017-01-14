@@ -100,6 +100,21 @@ class AnswerLike(models.Model):
     objects = AnswerLikeManager()
 
 
+class TagManager(models.Manager):
+    def get_by_title(self, title):
+        return self.get(tag_title=title)
+
+    def get_or_create(self, title):
+        try:
+            tag = self.get_by_title(title)
+        except Tag.DoesNotExist:
+            tag = self.create(tag_title=title, tag_color=choice(Tag.COLORS)[0])
+        return tag
+
+    def get_popular(self):
+        return self.order_by_question_count().all()[:20]
+
+
 class Tag(models.Model):
     GREEN = 'green'
     BLUE = 'blue'
@@ -114,3 +129,5 @@ class Tag(models.Model):
 
     tag_title = models.CharField(max_length=30)
     tag_color = models.CharField(max_length=2, choices=COLORS, default=BLACK)
+
+    objects = TagManager()
