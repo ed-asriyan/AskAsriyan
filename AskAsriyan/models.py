@@ -1,3 +1,5 @@
+from random import choice
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
@@ -116,18 +118,15 @@ class TagManager(models.Manager):
 
 
 class Tag(models.Model):
-    GREEN = 'green'
-    BLUE = 'blue'
-    BLACK = 'black'
-    RED = 'red'
     COLORS = (
-        ('GR', GREEN),
-        ('DB', BLUE),
-        ('B', BLACK),
-        ('RE', RED),
+        ('Y', 'yellow'),
+        ('O', 'orange'),
+        ('R', 'red'),
+        ('G', 'green'),
+        ('B', 'blue'),
     )
 
     tag_title = models.CharField(max_length=30)
-    tag_color = models.CharField(max_length=2, choices=COLORS, default=BLACK)
+    tag_color = models.CharField(max_length=2, choices=COLORS, default='B')
 
     objects = TagManager()
