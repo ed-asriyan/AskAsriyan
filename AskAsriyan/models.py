@@ -16,6 +16,7 @@ class Article(models.Model):
     article_date = models.DateTimeField()
     article_rating = models.IntegerField(default=0)
     article_author = models.ForeignKey(User)
+    article_tags = models.ManyToManyField('Tag')
 
     def get_comments(self):
         return Comment.objects.filter(comment_article_id=self.id)
@@ -97,3 +98,19 @@ class AnswerLike(models.Model):
     comment_like_value = models.SmallIntegerField(default=1)
 
     objects = AnswerLikeManager()
+
+
+class Tag(models.Model):
+    GREEN = 'green'
+    BLUE = 'blue'
+    BLACK = 'black'
+    RED = 'red'
+    COLORS = (
+        ('GR', GREEN),
+        ('DB', BLUE),
+        ('B', BLACK),
+        ('RE', RED),
+    )
+
+    tag_title = models.CharField(max_length=30)
+    tag_color = models.CharField(max_length=2, choices=COLORS, default=BLACK)
