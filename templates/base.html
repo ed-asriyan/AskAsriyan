@@ -79,7 +79,7 @@
                 <div class="row">
                     <ul class="list-unstyled">
                         {% for tag in tags %}
-                            <a href="#" style="margin: 5px; font-size: {{ tag.weight }}pt">{{ tag.name }}</a>
+                            <a href="{{ tag.get_url }}" style="margin: 5px; font-size: {{ tag.tag_weight }}pt; color: {{ tag.get_tag_color_display }}">{{ tag.tag_title }}</a>
                         {% endfor %}
                 </div>
 

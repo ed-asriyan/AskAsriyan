@@ -15,6 +15,12 @@
             <p>
                 {{ article.article_body }}
             </p>
+            <div align="right">
+                {% for tag in article.article_tags.all %}
+                    <a href="{{ tag.get_url }}" class="label label-info btn-inverse" role="button"
+                       style="background: {{ tag.get_tag_color_display }}">{{ tag.tag_title }}</a>
+                {% endfor %}
+            </div>
             <hr align="center">
             <div>
                 <div class="col-xs-4" align="left">
@@ -36,9 +42,6 @@
                     {% endif %}
                 </label>
                 </div>
-                <span style="font-size:20px;">Tags:</span>
-                <span><a href="#">Perl</a></span>
-                <span><a href="#">Django</a></span>
             </div>
         </div>
     </div>

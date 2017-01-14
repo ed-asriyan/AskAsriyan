@@ -1,14 +1,28 @@
+from random import choice
+
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import Sum
+from django.db.models import Sum, Count
 
 
 class Profile(models.Model):
+    class Meta:
+        db_table = "profile"
+
     profile_user = models.ForeignKey(User)
+    profile_avatar = models.ImageField()
+
+
+class ArticleManager(models.Manager):
+    def get_by_tag(self, tag):
+        if tag is None:
+            return []
+
+        return Article.objects.all().filter(article_tags__tag_title=tag)
 
 
 class Article(models.Model):
-    class Meta():
+    class Meta:
         db_table = "article"
 
     article_title = models.CharField(max_length=200)
@@ -16,6 +30,9 @@ class Article(models.Model):
     article_date = models.DateTimeField()
     article_rating = models.IntegerField(default=0)
     article_author = models.ForeignKey(User)
+    article_tags = models.ManyToManyField('Tag')
+
+    objects = ArticleManager()
 
     def get_comments(self):
         return Comment.objects.filter(comment_article_id=self.id)
@@ -97,3 +114,48 @@ class AnswerLike(models.Model):
     comment_like_value = models.SmallIntegerField(default=1)
 
     objects = AnswerLikeManager()
+
+
+class TagManager(models.Manager):
+    def with_articles_count(self):
+        return self.annotate(article_count=Count('article'))
+
+    def order_by_article_count(self):
+        return self.with_articles_count().order_by('-article_count')
+
+    def get_by_title(self, title):
+        return self.get(tag_title=title)
+
+    def get_or_create(self, title):
+        try:
+            tag = self.get_by_title(title)
+        except Tag.DoesNotExist:
+            tag = self.create(tag_title=title, tag_color=choice(Tag.COLORS)[0])
+        return tag
+
+    def get_popular(self):
+        return self.order_by_article_count().all()[:20]
+
+
+class Tag(models.Model):
+    COLORS = (
+        ('Y', 'yellow'),
+        ('O', 'orange'),
+        ('R', 'red'),
+        ('G', 'green'),
+        ('B', 'blue'),
+    )
+
+    tag_title = models.CharField(max_length=30)
+    tag_color = models.CharField(max_length=2, choices=COLORS, default='B')
+
+    objects = TagManager()
+
+    def get_articles_count(self):
+        return len(self.get_articles())
+
+    def get_articles(self):
+        return Article.objects.all().filter(article_tags__tag_title=self.tag_title)
+
+    def get_url(self):
+        return '/tag/' + self.tag_title + '/1/'

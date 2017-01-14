@@ -12,14 +12,13 @@ import random
 
 def base_decorator(func):
     def decorator(request, *args, **kwargs):
-        class _tag:
-            def __init__(self, name, weight):
-                self.name = name
-                self.weight = weight
+        tags = models.Tag.objects.get_popular()
 
-        tags = [_tag(''.join([chr(random.randint(ord('A'), ord('z'))) for j in
-                              range(0, random.randint(5, 10))]), random.randint(10, 25)) for i in
-                range(random.randint(15, 35))]
+        min_height = min(tags, key=lambda x: x.article_count).article_count
+        max_height = max(tags, key=lambda x: x.article_count).article_count
+
+        for tag in tags:
+            tag.tag_weight = (tag.get_articles_count() - min_height) // (max_height - min_height) * 8 + 10
 
         return func(request, tags=tags, user=auth.get_user(request), **kwargs)
 
@@ -35,6 +34,16 @@ def index_page_view(request, *args, **kwargs):
 def article_list_page_view(request, page=1, *args, **kwargs):
     page = int(page)
     articles = Paginator(models.Article.objects.all(), 10)
+    if page > articles.num_pages:
+        return redirect('/')
+    return render_to_response('index.html', {'articles': articles.page(page), 'is_preview': True, **kwargs})
+
+
+@base_decorator
+def article_by_tag_list_page_view(request, tag, page=1, *args, **kwargs):
+    page = int(page)
+
+    articles = Paginator(models.Article.objects.get_by_tag(tag), 10)
     if page > articles.num_pages:
         return redirect('/')
     return render_to_response('index.html', {'articles': articles.page(page), 'is_preview': True, **kwargs})
