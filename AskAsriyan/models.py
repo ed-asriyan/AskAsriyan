@@ -158,4 +158,4 @@ class Tag(models.Model):
         return Article.objects.all().filter(article_tags__tag_title=self.tag_title)
 
     def get_url(self):
-        return '/tag/' + self.tag_title + '?page=1'
+        return '/articles?tag=' + self.tag_title + '&page=1'

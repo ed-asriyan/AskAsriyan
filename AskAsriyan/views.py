@@ -49,13 +49,11 @@ def index_page_view(request, *args, **kwargs):
 
 @base_decorator
 def article_list_page_view(request, *args, **kwargs):
-    return pagination(request, 'lists/article_list.html', models.Article.objects.all(), 'articles', 10, *args, **kwargs)
-
-
-@base_decorator
-def article_by_tag_list_page_view(request, tag, page=1, *args, **kwargs):
-    return pagination(request, 'lists/article_list.html', models.Article.objects.get_by_tag(tag), 'articles', 10, *args,
-                      **kwargs)
+    if request.GET.get('tag'):
+        articles = models.Article.objects.get_by_tag(request.GET.get('tag'))
+    else:
+        articles = models.Article.objects.all()
+    return pagination(request, 'lists/article_list.html', articles, 'articles', 10, *args, **kwargs)
 
 
 @base_decorator
