@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.http import Http404, HttpResponseBadRequest
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from . import models
 from . import forms
@@ -23,6 +23,23 @@ def base_decorator(func):
         return func(request, tags=tags, user=auth.get_user(request), **kwargs)
 
     return decorator
+
+
+def pagination(request, html_page, objects, object_name, objects_count, *args, **kwargs):
+    paginator = Paginator(objects, objects_count)
+    page = request.GET.get('page')
+
+    try:
+        objects = paginator.page(page)
+    except PageNotAnInteger:
+        objects = paginator.page(1)
+    except EmptyPage:
+        objects = paginator.page(paginator.num_pages)
+
+    kwargs[object_name] = objects
+    kwargs['pagination_list'] = objects
+
+    return render_to_response(html_page, {**kwargs})
 
 
 @base_decorator
