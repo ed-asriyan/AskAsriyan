@@ -54,12 +54,8 @@ def article_list_page_view(request, *args, **kwargs):
 
 @base_decorator
 def article_by_tag_list_page_view(request, tag, page=1, *args, **kwargs):
-    page = int(page)
-
-    articles = Paginator(models.Article.objects.get_by_tag(tag), 10)
-    if page > articles.num_pages:
-        return redirect('/')
-    return render_to_response('index.html', {'articles': articles.page(page), 'is_preview': True, **kwargs})
+    return pagination(request, 'lists/article_list.html', models.Article.objects.get_by_tag(tag), 'articles', 10, *args,
+                      **kwargs)
 
 
 @base_decorator
