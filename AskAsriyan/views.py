@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.http import Http404, HttpResponseBadRequest
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from . import models
 from . import forms
@@ -25,28 +25,47 @@ def base_decorator(func):
     return decorator
 
 
+def pagination(request, html_page, objects, object_name, objects_count, *args, **kwargs):
+    paginator = Paginator(objects, objects_count)
+    page = request.GET.get('page')
+
+    try:
+        objects = paginator.page(page)
+    except PageNotAnInteger:
+        objects = paginator.page(1)
+    except EmptyPage:
+        objects = paginator.page(paginator.num_pages)
+
+    kwargs[object_name] = objects
+    kwargs['pagination_list'] = objects
+
+    return render_to_response(html_page, {**kwargs})
+
+
 @base_decorator
 def index_page_view(request, *args, **kwargs):
-    return redirect('/articles/1')
+    return redirect('/articles?page=1')
 
 
 @base_decorator
-def article_list_page_view(request, page=1, *args, **kwargs):
-    page = int(page)
-    articles = Paginator(models.Article.objects.all(), 10)
-    if page > articles.num_pages:
-        return redirect('/')
-    return render_to_response('index.html', {'articles': articles.page(page), 'is_preview': True, **kwargs})
+def article_list_page_view(request, *args, **kwargs):
+    if request.GET.get('tag'):
+        articles = models.Article.objects.get_by_tag(request.GET.get('tag'))
+    else:
+        articles = models.Article.objects.all()
+    return pagination(request, 'lists/article_list.html', articles, 'articles', 10, *args, **kwargs)
 
 
 @base_decorator
-def article_by_tag_list_page_view(request, tag, page=1, *args, **kwargs):
-    page = int(page)
+def newest_list_page_view(request, *args, **kwargs):
+    articles = models.Article.objects.get_newest()
+    return pagination(request, 'lists/article_list.html', articles, 'articles', 10, *args, **kwargs)
 
-    articles = Paginator(models.Article.objects.get_by_tag(tag), 10)
-    if page > articles.num_pages:
-        return redirect('/')
-    return render_to_response('index.html', {'articles': articles.page(page), 'is_preview': True, **kwargs})
+
+@base_decorator
+def popular_list_page_view(request, *args, **kwargs):
+    articles = models.Article.objects.get_popular()
+    return pagination(request, 'lists/article_list.html', articles, 'articles', 10, *args, **kwargs)
 
 
 @base_decorator
@@ -95,7 +114,10 @@ def article_view(request, article_id, *args, **kwargs):
             return redirect(form.save().get_url())
     else:
         form = forms.CommentAddForm(initial={'article_id': article_id})
-    return render_to_response('article.html', {'article': article, 'is_preview': False, **kwargs, 'form': form})
+
+    comments = article.get_comments()
+    return pagination(request, 'article.html', comments, 'comments', 5, article=article, is_preview=False, form=form,
+                      *args, **kwargs)
 
 
 @base_decorator

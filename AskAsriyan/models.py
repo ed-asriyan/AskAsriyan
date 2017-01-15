@@ -20,6 +20,12 @@ class ArticleManager(models.Manager):
 
         return Article.objects.all().filter(article_tags__tag_title=tag)
 
+    def get_newest(self):
+        return self.all().order_by('-article_date')
+
+    def get_popular(self):
+        return self.all().order_by('-article_rating')
+
 
 class Article(models.Model):
     class Meta:
@@ -158,4 +164,4 @@ class Tag(models.Model):
         return Article.objects.all().filter(article_tags__tag_title=self.tag_title)
 
     def get_url(self):
-        return '/tag/' + self.tag_title + '/1/'
+        return '/articles?tag=' + self.tag_title + '&page=1'

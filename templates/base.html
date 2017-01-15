@@ -53,7 +53,10 @@
                             {% if user.is_superuser %}
                                 <li role="separator" class="divider"></li>
                                 <li><a href="/admin">Admin panel</a></li>
+                                <li role="separator" class="divider"></li>
                             {% endif %}
+                            <li><a href="/newest/">Newest</a></li>
+                            <li><a href="/popular/">Popular</a></li>
                         </ul>
                     </li>
                 {% else %}
@@ -79,7 +82,8 @@
                 <div class="row">
                     <ul class="list-unstyled">
                         {% for tag in tags %}
-                            <a href="{{ tag.get_url }}" style="margin: 5px; font-size: {{ tag.tag_weight }}pt; color: {{ tag.get_tag_color_display }}">{{ tag.tag_title }}</a>
+                            <a href="{{ tag.get_url }}"
+                               style="margin: 5px; font-size: {{ tag.tag_weight }}pt; color: {{ tag.get_tag_color_display }}">{{ tag.tag_title }}</a>
                         {% endfor %}
                 </div>
 
