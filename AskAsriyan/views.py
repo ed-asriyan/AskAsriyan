@@ -44,16 +44,12 @@ def pagination(request, html_page, objects, object_name, objects_count, *args, *
 
 @base_decorator
 def index_page_view(request, *args, **kwargs):
-    return redirect('/articles/1')
+    return redirect('/articles?page=1')
 
 
 @base_decorator
-def article_list_page_view(request, page=1, *args, **kwargs):
-    page = int(page)
-    articles = Paginator(models.Article.objects.all(), 10)
-    if page > articles.num_pages:
-        return redirect('/')
-    return render_to_response('index.html', {'articles': articles.page(page), 'is_preview': True, **kwargs})
+def article_list_page_view(request, *args, **kwargs):
+    return pagination(request, 'lists/article_list.html', models.Article.objects.all(), 'articles', 10, *args, **kwargs)
 
 
 @base_decorator

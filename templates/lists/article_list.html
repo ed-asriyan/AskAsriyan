@@ -1,26 +1,8 @@
-<div class="row">
+{% extends 'base.html' %}
+
+{% block content %}
     {% for article in articles %}
-        {% include "models/article.html" %}
+        {% include 'models/article.html' %}
     {% endfor %}
-</div>
-<div class="row" align="middle">
-    <ul class="pagination">
-        {% if articles.has_previous %}
-            <li><a href="/articles/{{ articles.previous_page_number }}/">&laquo;</a></li>
-        {% else %}
-            <li><a>&laquo;</a></li>
-        {% endif %}
-        {% for page in articles.paginator.page_range %}
-            {% if page == articles.number %}
-                <li class="active"><a href="/articles/{{ page }}/">{{ page }}</a></li>
-            {% else %}
-                <li><a href="/articles/{{ page }}/">{{ page }}</a></li>
-            {% endif %}
-        {% endfor %}
-        {% if articles.has_next %}
-            <li><a href="/articles/{{ articles.next_page_number }}/">&raquo;</a></li>
-        {% else %}
-            <li><a>&raquo;</a></li>
-        {% endif %}
-    </ul>
-</div>
+    {% include 'lists/pagination.html' %}
+{% endblock %}

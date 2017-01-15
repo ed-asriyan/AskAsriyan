@@ -22,7 +22,7 @@ urlpatterns = [
     url(r'^logout/', 'AskAsriyan.views.logout_view'),
     url(r'^article(?P<article_id>\d+)/', 'AskAsriyan.views.article_view'),
     url(r'^tag/(?P<tag>\w+)/(?P<page>\d+)/', 'AskAsriyan.views.article_by_tag_list_page_view'),
-    url(r'^articles/(?P<page>\d+)/', 'AskAsriyan.views.article_list_page_view'),
+    url(r'^articles/', 'AskAsriyan.views.article_list_page_view'),
     url(r'^ask/', 'AskAsriyan.views.article_add_view'),
     url(r'^settings/', 'AskAsriyan.views.profile_settings_view'),
     url(r'^$', 'AskAsriyan.views.index_page_view'),
