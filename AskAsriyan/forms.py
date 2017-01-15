@@ -79,13 +79,13 @@ class SignUpForm(forms.Form):
 
     def clean_password_repeat(self):
         if self.cleaned_data['password'] != self.cleaned_data['password_repeat']:
-            raise forms.ValidationError('Passwords is not equal.')
+            raise forms.ValidationError('Passwords are not equal.')
 
     def save(self):
-        self.user = User.objects.create_user(self.cleaned_data['login'], self.cleaned_data['email'],
-                                             self.cleaned_data['password'], first_name=self.cleaned_data['nick'])
+        user = User.objects.create_user(self.cleaned_data['login'], self.cleaned_data['email'],
+                                        self.cleaned_data['password'], first_name=self.cleaned_data['nick'])
 
-        models.Profile.objects.create(profile_user=self.user)
+        models.Profile.objects.create(profile_user=user)
 
 
 class ArticleAddForm(forms.Form):
