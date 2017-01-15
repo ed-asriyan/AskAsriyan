@@ -148,6 +148,12 @@ class CommentAddForm(forms.Form):
             return id
         raise forms.ValidationError('Article does not exist.')
 
+    def clean(self):
+        if not self._user.is_authenticated or self._user.id == models.Article.objects.get(
+                id=self.cleaned_data['article_id']).article_author:
+            raise forms.ValidationError('You do not have enough permissions.')
+        return self.cleaned_data
+
     def save(self):
         comment_body = self.cleaned_data['text']
         comment_date = datetime.datetime.now()
