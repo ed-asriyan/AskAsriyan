@@ -23,6 +23,9 @@ class ArticleManager(models.Manager):
     def get_newest(self):
         return self.all().order_by('-article_date')
 
+    def get_popular(self):
+        return self.all().order_by('-article_rating')
+
 
 class Article(models.Model):
     class Meta:

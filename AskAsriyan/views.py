@@ -55,10 +55,18 @@ def article_list_page_view(request, *args, **kwargs):
         articles = models.Article.objects.all()
     return pagination(request, 'lists/article_list.html', articles, 'articles', 10, *args, **kwargs)
 
+
 @base_decorator
 def newest_list_page_view(request, *args, **kwargs):
     articles = models.Article.objects.get_newest()
     return pagination(request, 'lists/article_list.html', articles, 'articles', 10, *args, **kwargs)
+
+
+@base_decorator
+def popular_list_page_view(request, *args, **kwargs):
+    articles = models.Article.objects.get_popular()
+    return pagination(request, 'lists/article_list.html', articles, 'articles', 10, *args, **kwargs)
+
 
 @base_decorator
 def sign_in_page_view(request, *args, **kwargs):
