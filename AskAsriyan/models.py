@@ -20,6 +20,9 @@ class ArticleManager(models.Manager):
 
         return Article.objects.all().filter(article_tags__tag_title=tag)
 
+    def get_newest(self):
+        return self.all().order_by('-article_date')
+
 
 class Article(models.Model):
     class Meta:
