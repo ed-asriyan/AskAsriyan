@@ -36,20 +36,22 @@ def BootstrapTextInput(attrs={}, *args, **kwargs):
 
 
 class SignInForm(forms.Form):
-    user_name = forms.CharField(max_length=20, label='Login', widget=BootstrapStringInput)
+    user_name = forms.CharField(label='Login', widget=BootstrapStringInput)
     password = forms.CharField(label='Password', widget=BootstrapPasswordInput)
 
+    _user = None
+
     def clean(self):
-        self._user = auth.authenticate(username=self.cleaned_data['user_name'], password=self.cleaned_data['password'])
-        if not self._user:
+        try:
+            self._user = auth.authenticate(username=self.cleaned_data['user_name'],
+                                           password=self.cleaned_data['password'])
+        except:
             raise forms.ValidationError('Invalid login or password')
 
     def auth(self):
         if not self._user:
             self.clean()
         return self._user
-
-    _user = None
 
 
 class SignUpForm(forms.Form):
@@ -77,13 +79,13 @@ class SignUpForm(forms.Form):
 
     def clean_password_repeat(self):
         if self.cleaned_data['password'] != self.cleaned_data['password_repeat']:
-            raise forms.ValidationError('Passwords is not equal.')
+            raise forms.ValidationError('Passwords are not equal.')
 
     def save(self):
-        self.user = User.objects.create_user(self.cleaned_data['login'], self.cleaned_data['email'],
-                                             self.cleaned_data['password'], first_name=self.cleaned_data['nick'])
+        user = User.objects.create_user(self.cleaned_data['login'], self.cleaned_data['email'],
+                                        self.cleaned_data['password'], first_name=self.cleaned_data['nick'])
 
-        models.Profile.objects.create(profile_user=self.user)
+        models.Profile.objects.create(profile_user=user)
 
 
 class ArticleAddForm(forms.Form):
@@ -145,6 +147,12 @@ class CommentAddForm(forms.Form):
         if models.Article.objects.get(id=id):
             return id
         raise forms.ValidationError('Article does not exist.')
+
+    def clean(self):
+        if not self._user.is_authenticated or self._user.id == models.Article.objects.get(
+                id=self.cleaned_data['article_id']).article_author:
+            raise forms.ValidationError('You do not have enough permissions.')
+        return self.cleaned_data
 
     def save(self):
         comment_body = self.cleaned_data['text']
