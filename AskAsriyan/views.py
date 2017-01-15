@@ -108,7 +108,10 @@ def article_view(request, article_id, *args, **kwargs):
             return redirect(form.save().get_url())
     else:
         form = forms.CommentAddForm(initial={'article_id': article_id})
-    return render_to_response('article.html', {'article': article, 'is_preview': False, **kwargs, 'form': form})
+
+    comments = article.get_comments()
+    return pagination(request, 'article.html', comments, 'comments', 5, article=article, is_preview=False, form=form,
+                      *args, **kwargs)
 
 
 @base_decorator
