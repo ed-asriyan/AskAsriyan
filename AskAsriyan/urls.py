@@ -17,9 +17,9 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^sign_in/', 'AskAsriyan.views.login_view'),
-    url(r'^sign_up/', 'AskAsriyan.views.register_view'),
-    url(r'^logout/', 'AskAsriyan.views.logout_view'),
+    url(r'^sign_in/', 'AskAsriyan.views.login_view', name='sign_in'),
+    url(r'^sign_up/', 'AskAsriyan.views.register_view', name='sign_up'),
+    url(r'^logout/', 'AskAsriyan.views.logout_view', name='logout'),
     url(r'^article(?P<article_id>\d+)/', 'AskAsriyan.views.article_view'),
     url(r'^articles/', 'AskAsriyan.views.article_list_page_view'),
     url(r'newest/', 'AskAsriyan.views.newest_list_page_view'),
