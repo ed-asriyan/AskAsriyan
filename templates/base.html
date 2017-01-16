@@ -53,10 +53,7 @@
                             {% if user.is_superuser %}
                                 <li role="separator" class="divider"></li>
                                 <li><a href="/admin">Admin panel</a></li>
-                                <li role="separator" class="divider"></li>
                             {% endif %}
-                            <li><a href="{% url 'newest' %}">Newest</a></li>
-                            <li><a href="{% url 'popular' %}">Popular</a></li>
                         </ul>
                     </li>
                 {% else %}
@@ -77,6 +74,18 @@
             {% endblock %}
         </div>
         <div class="col-lg-4 col-md-4 hidden-sm hidden-xs">
+            <div class="row">
+                <div align="center" class="col-sm-6">
+                    <label>
+                        <a href="{% url 'newest' %}" style="color: red; font-size: xx-large">Newest</a>
+                    </label>
+                </div>
+                <label>
+                    <div align="center" class="col-sm-6">
+                        <a href="{% url 'popular' %}" style="color: blue; font-size: xx-large">Popular</a>
+                    </div>
+                </label>
+            </div>
             <div class="well" style="font-size:20px;">
                 <h2>Popular Tags</h2>
                 <div class="row">
