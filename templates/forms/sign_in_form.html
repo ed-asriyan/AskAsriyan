@@ -1,7 +1,9 @@
-<form class="form-horizontal" method="post" action="/sign_in/">
+<form class="form-horizontal" method="post" action="{% url 'sign_in' %}">
     {% include 'forms/horizontal_form.html' %}
     <div class="form-actions ">
         <button type="submit" class="btn btn-default col-xs-offset-4 col-sm-offset-5 col-xs-4">Sign in</button>
-        <label class="control-label center-block col-xs-3" style="text-align: right"><u><a href="/sign_up/">Sign up</a></u></label>
+        <label class="control-label center-block col-xs-3" style="text-align: right">
+            <u><a href="{% url 'sign_up' %}">Sign up</a></u>
+        </label>
     </div>
 </form>

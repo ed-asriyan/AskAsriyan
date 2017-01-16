@@ -1,4 +1,4 @@
-<form class="form-horizontal" method="post" action="/settings/">
+<form class="form-horizontal" method="post" action="{% url 'settings' %}">
     {% include 'forms/horizontal_form.html' %}
     <div class="form-actions">
         <button type="submit" class="btn btn-default col-xs-4 col-xs-offset-4">Save</button>
