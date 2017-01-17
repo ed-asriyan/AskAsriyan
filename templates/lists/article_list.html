@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for article in articles %}
+        {% include 'models/article.html' %}
+    {% endfor %}
+    {% include 'lists/pagination.html' %}
+{% endblock %}

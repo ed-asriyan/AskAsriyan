@@ -1,0 +1,55 @@
+<div class="row">
+    <div class="hidden-xs hidden-sm col-md-3">
+        <div>
+            <img class="thumbnail" height="150px" style="background-color: white;"/>
+        </div>
+        <div class="row" align="middle">
+            <a class="glyphicon glyphicon-thumbs-up" href="#" style="color: green"></a>
+            <label>{{ article.article_rating }}</label>
+            <a href="#" class="glyphicon glyphicon-thumbs-down" style="color: red"></a>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-9">
+        <p>
+            {{ comment.comment_body }}
+        </p>
+        <hr align="center">
+        <div>
+            <div class="col-xs-4" align="left">
+                <label><a class="glyphicon glyphicon-user col-xs-4"
+                          href="#">{{ comment.comment_author }}</a></label>
+            </div>
+            <div class="col-xs-4" align="middle">
+                <label>
+                    {% if article.article_author_id == user.id %}
+                        <form>
+                            <button type="button" class="btn btn-default">
+                                {% if comment.comment_is_correct %}
+                                    Remove correct mark
+                                {% else %}
+                                    Mark as correct
+                                {% endif %}
+                            </button>
+                        </form>
+                    {% else %}
+                        {% if comment.comment_is_correct %}
+                            <label class="glyphicon glyphicon-star" style="color: green"></label>
+                        {% endif %}
+                    {% endif %}
+                </label>
+            </div>
+            <div class="col-xs-4" align="right">
+                <label class="glyphicon glyphicon-calendar"></label>
+                <label>
+                    {% if comment.comment_date.date != comment.comment_date.now.date %}
+                        {{ comment.comment_date.date }}
+                    {% else %}
+                        {{ comment.comment_date.time }}
+                    {% endif %}
+                </label>
+            </div>
+        </div>
+    </div>
+    <hr align="center" size="100">
+</div>
+<hr align="center" size="100">
